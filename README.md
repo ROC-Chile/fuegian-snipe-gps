@@ -29,11 +29,6 @@ Data are not duplicated in this repository. Export the study as CSV from Moveban
 
 ```
 fuegian-snipe-gps/
-├── README.md
-├── .gitignore
-├── renv.lock                    # package snapshot (generate with renv::snapshot())
-├── data/
-│   └── data_dictionary.md       # column descriptions for the Movebank export
 ├── R/
 │   ├── 00_packages.R            # library calls
 │   ├── 01_load_clean.R          # import, filter, format; builds dat and telem
@@ -44,9 +39,10 @@ fuegian-snipe-gps/
 │   └── 05_figures.R             # Figure 2 (map + AKDE isopleths)
 ├── analysis/
 │   └── main_analysis.R          # master runner: sources 00–05 in order
-└── outputs/
-    ├── figures/                 # fig2_map.pdf / .png
-    └── tables/                  # akde_areas.csv, mcp_areas.csv, step_lengths.csv
+├── data/
+│   └── data_dictionary.md       # column descriptions for the Movebank export
+├── README.md
+├── renv.lock                    # package snapshot (generate with renv::snapshot())
 ```
 
 ---
