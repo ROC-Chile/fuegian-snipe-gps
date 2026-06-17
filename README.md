@@ -30,8 +30,6 @@ Data are not duplicated in this repository. Export the study as CSV from Moveban
 ```
 fuegian-snipe-gps/
 ├── README.md
-├── LICENSE
-├── CITATION.cff
 ├── .gitignore
 ├── renv.lock                    # package snapshot (generate with renv::snapshot())
 ├── data/
@@ -101,5 +99,5 @@ Data: see Movebank study 5109989622 for terms of use.
 
 ## Contact
 
-Erik M. Sandvig — Universidad Santo Tomás / Centro Bahía Lomas, Puerto Montt, Chile  
-Fernando Medrano — Red de Observadores de Aves y Vida Silvestre de Chile
+Erik M. Sandvig — eriksandvig@redobservadores.cl - Red de Observadores de Aves y Vida Silvestre de Chile (ROC)
+Fernando Medrano — fernandomedrano@redobservadores.cl - Red de Observadores de Aves y Vida Silvestre de Chile (ROC) 
