@@ -2,8 +2,6 @@
 
 **Medrano et al. (in prep)**
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20763067.svg)](https://doi.org/10.5281/zenodo.20763067)
-
 ---
 
 ## Overview
@@ -12,7 +10,7 @@ This repository contains the R code used to process GPS tracking data, estimate 
 
 > Medrano, F., Raimilla, V., Contardo, N., Gallardo, B., Gutiérrez, P., Melgarejo, M., Muñoz, B., Quintanilla, E., Sandvig, E. M., Eberhart-Hertel, L., and Kempenaers, B. GPS tracking provides evidence of year-round residency in Fuegian Snipe (*Gallinago stricklandii*) at the northern edge of their Patagonian breeding range. *In preparation.*
 
-Two adult Fuegian Snipe were captured and fitted with PinPoint 120 GPS-Argos transmitters (~6 g; ~2.6% body mass) at Parque La Tapera, Aysén Region, Chile (~48°S), in October 2024. Both individuals were tracked through July 2025 (264–424 days). Home ranges were estimated using autocorrelated kernel density estimation (AKDE; Fleming et al. 2015) implemented in the `ctmm` package (Calabrese et al. 2016). MCPs and step lengths were calculated with the `amt` package (Signer et al. 2019).
+Two adult Fuegian Snipe were captured and fitted with PinPoint 120 GPS-Argos transmitters (~6 g; ~2.6% body mass) at Parque La Tapera, Aysén Region, Chile (~48°S), in October 2024. Individuals were tracked for 264 and 424 days (October 2024 – December 2025). Range residency was assessed from empirical variograms, and home ranges were estimated with the area-corrected autocorrelated kernel density estimator (AKDEc; Fleming and Calabrese 2017) conditional on models selected by AICc and fitted by pHREML implemented in the `ctmm` package (Calabrese et al. 2016). MCPs and step lengths were calculated with the `amt` package (Signer et al. 2019).
 
 ---
 
@@ -31,20 +29,25 @@ Data are not duplicated in this repository. Export the study as CSV from Moveban
 
 ```
 fuegian-snipe-gps/
+├── README.md
+├── LICENSE
+├── CITATION.cff
+├── .gitignore
+├── renv.lock                    # package snapshot (generate with renv::snapshot())
+├── data/
+│   └── data_dictionary.md       # column descriptions for the Movebank export
 ├── R/
 │   ├── 00_packages.R            # library calls
 │   ├── 01_load_clean.R          # import, filter, format; builds dat and telem
-│   ├── 02_ctmm_fit.R            # variogram + ctmm.select; full tracks and
-│   │                            #   two sub-periods of individual 266503
-│   ├── 03_akde.R                # AKDE UDs (50% + 95%) with 95% CIs
-│   ├── 04_mcp.R                 # 95% + 100% MCPs; step lengths via amt::steps
+│   ├── 02_ctmm_fit.R            # variograms (Fig. S1); ctmm.select (pHREML, AICc)
+│   ├── 03_akde.R                # AKDEc UDs (50% + 95%), 95% CIs, tau_p, N_area
+│   ├── 04_mcp.R                 # MCP95 + MCP100; step lengths via amt::steps
 │   └── 05_figures.R             # Figure 2 (map + AKDE isopleths)
 ├── analysis/
 │   └── main_analysis.R          # master runner: sources 00–05 in order
-├── data/
-│   └── data_dictionary.md       # column descriptions for the Movebank export
-├── README.md
-├── renv.lock                    # package snapshot (generate with renv::snapshot())
+└── outputs/
+    ├── figures/                 # figS1_variograms, fig2_map (.pdf / .png)
+    └── tables/                  # akde_areas.csv, mcp_areas.csv, step_lengths.csv
 ```
 
 ---
@@ -97,5 +100,5 @@ Data: see Movebank study 5109989622 for terms of use.
 
 ## Contact
 
-Erik M. Sandvig — eriksandvig@redobservadores.cl - Red de Observadores de Aves y Vida Silvestre de Chile (ROC)
-Fernando Medrano — fernandomedrano@redobservadores.cl - Red de Observadores de Aves y Vida Silvestre de Chile (ROC) 
+Erik M. Sandvig — Universidad Santo Tomás / Centro Bahía Lomas, Puerto Montt, Chile  
+Fernando Medrano — Red de Observadores de Aves y Vida Silvestre de Chile
