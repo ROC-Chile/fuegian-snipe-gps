@@ -1,57 +1,41 @@
 # 02_ctmm_fit.R
-# Fit continuous-time movement models to each individual, and to the two
-# sub-periods of individual 266503 (before and after the March 2025 shift).
-#
-# Candidate models compared by AICc: IID, OU, OUF, OUanisotropic.
+# (1) Assess range residency from the empirical variogram of each individual.
+# (2) Select a continuous-time movement model by AICc among IID (null; AKDE
+#     reduces to conventional KDE), OU (positional autocorrelation, tau_p),
+#     and OUF/OUf (positional + velocity autocorrelation, tau_v), in isotropic
+#     and anisotropic forms, fitted by perturbative hybrid REML (pHREML).
 #
 # Output:
-#   fits        — named list of best-fit ctmm models (full tracks)
-#   fits_266503 — named list of best-fit models for 266503 sub-periods
+#   vgs   - named list of empirical variograms
+#   fits  - named list of selected ctmm models
+#   outputs/figures/figS1_variograms.pdf / .png
 
 set.seed(42)
 
-# --- Full-track model selection ---
+# --- (1) Empirical variograms ---
+vgs <- lapply(telem, variogram)
+
+# --- (2) Model selection ---
 fits <- lapply(telem, function(tel) {
   guess <- ctmm.guess(tel, interactive = FALSE)
-  ctmm.select(tel, guess, verbose = FALSE)
+  ctmm.select(tel, guess, method = "pHREML", IC = "AICc", verbose = FALSE)
 })
-names(fits) <- names(telem)
 
-cat("Best-fit models (full tracks):\n")
-for (id in names(fits)) {
-  cat(" ", id, "->", summary(fits[[id]])$name, "\n")
+cat("Selected models:\n")
+for (id in names(fits)) cat(" ", id, "->", summary(fits[[id]])$name, "\n")
+
+# --- Fig. S1: variograms with selected model overlaid ---
+# Left panel per bird: full lag range (asymptote = range residency).
+plot_vg <- function() {
+  op <- par(mfrow = c(1, length(vgs)), mar = c(4.5, 4.5, 2, 1))
+  for (id in names(vgs)) {
+    plot(vgs[[id]], CTMM = fits[[id]], fraction = 1, level = c(0.5, 0.95),
+         main = id)
+  }
+  par(op)
 }
-
-# --- Sub-period fits for individual 266503 ---
-# Period 1: 14 Oct 2024 – 15 Mar 2025 (pre-shift)
-# Period 2: 23 Mar 2025 – 3 Jun 2025  (secondary activity centre)
-
-tel_266503 <- telem[["266503"]]
-
-t1_start <- as.POSIXct("2024-10-14", tz = "UTC")
-t1_end   <- as.POSIXct("2025-03-15", tz = "UTC")
-t2_start <- as.POSIXct("2025-03-23", tz = "UTC")
-t2_end   <- as.POSIXct("2025-06-03", tz = "UTC")
-
-# Subset telemetry by period
-subset_tel <- function(tel, from, to) {
-  idx <- tel$t >= as.numeric(from) & tel$t <= as.numeric(to)
-  tel[idx, ]
-}
-
-tel_p1 <- subset_tel(tel_266503, t1_start, t1_end)
-tel_p2 <- subset_tel(tel_266503, t2_start, t2_end)
-
-fit_period <- function(tel) {
-  guess <- ctmm.guess(tel, interactive = FALSE)
-  ctmm.select(tel, guess, verbose = FALSE)
-}
-
-fits_266503 <- list(
-  period1 = fit_period(tel_p1),
-  period2 = fit_period(tel_p2)
-)
-
-cat("\nBest-fit models for 266503 sub-periods:\n")
-cat("  Period 1 (Oct–Mar):", summary(fits_266503$period1)$name, "\n")
-cat("  Period 2 (Mar–Jun):", summary(fits_266503$period2)$name, "\n")
+pdf("outputs/figures/figS1_variograms.pdf", width = 8, height = 4)
+plot_vg(); dev.off()
+png("outputs/figures/figS1_variograms.png", width = 8, height = 4,
+    units = "in", res = 300)
+plot_vg(); dev.off()

@@ -1,15 +1,10 @@
 # main_analysis.R
-# Master script — runs the full analysis pipeline in order.
-# Before running: place Movebank CSV export in data/ and call renv::restore().
+# Full pipeline. Before running: renv::restore() and place the Movebank export
+# (study 5109989622) at data/movebank_5109989622.csv.
 
 source("R/00_packages.R")
-source("R/01_load_clean.R")   # imports data; creates dat, telem
-source("R/02_ctmm_fit.R")     # fits ctmm models; creates fits, fits_266503,
-                               #   t1_start/end, t2_start/end, subset_tel()
-source("R/03_akde.R")         # AKDE home ranges; creates akdes, akdes_266503
-source("R/04_mcp.R")          # MCPs (95% + 100%) and step lengths via amt
-source("R/05_figures.R")      # Figure 2 (map + isopleths)
-
-cat("\nPipeline complete.\n")
-cat("Tables : outputs/tables/\n")
-cat("Figures: outputs/figures/\n")
+source("R/01_load_clean.R")   # dat, telem
+source("R/02_ctmm_fit.R")     # variograms (Fig. S1), model selection (pHREML, AICc)
+source("R/03_akde.R")         # AKDEc 50% / 95% UDs, tau_p, N_area
+source("R/04_mcp.R")          # MCP95 / MCP100, step lengths
+source("R/05_figures.R")      # Fig. 2
