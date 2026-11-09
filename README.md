@@ -41,7 +41,7 @@ fuegian-snipe-gps/
 │   ├── 01_load_clean.R          # import, filter, format; builds dat and telem
 │   ├── 02_ctmm_fit.R            # variograms (Fig. S1); ctmm.select (pHREML, AICc)
 │   ├── 03_akde.R                # AKDEc UDs (50% + 95%), 95% CIs, tau_p, N_area
-│   ├── 04_mcp.R                 # MCP95 + MCP100; step lengths via amt::steps
+│   ├── 04_mcp.R                 # MCP100; step lengths via amt::steps
 │   └── 05_figures.R             # Figure 2 (map + AKDE isopleths)
 ├── analysis/
 │   └── main_analysis.R          # master runner: sources 00–05 in order
