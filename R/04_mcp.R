@@ -1,5 +1,5 @@
 # 04_mcp.R
-# 95% and 100% MCPs and step lengths between consecutive fixes (amt).
+# 100% MCPs and step lengths between consecutive fixes (amt).
 #
 # Output:
 #   outputs/tables/mcp_areas.csv
@@ -14,11 +14,10 @@ build_track <- function(df) {
 tracks <- split(dat, dat$individual) |> lapply(build_track)
 
 mcp_table <- bind_rows(lapply(names(tracks), function(id) {
-  m <- hr_mcp(tracks[[id]], levels = c(0.95, 1.00))
-  hr_area(m) |>
-    transmute(individual = id,
-              level      = paste0("MCP", level * 100),
-              area_ha    = as.numeric(area) / 1e4)
+  m <- hr_area(hr_mcp(tracks[[id]], levels = 1.00))
+  tibble(individual = id,
+         n_fixes    = nrow(tracks[[id]]),
+         mcp100_ha    = as.numeric(area) / 1e4)
 }))
 print(mcp_table)
 write_csv(mcp_table, "outputs/tables/mcp_areas.csv")
